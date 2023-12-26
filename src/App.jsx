@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 function App() {
   const [index, setIndex] = useState(0);
+  const [items, setItems] = useState(images);
 
   // function clickHandler() {
   //   if (index > images.length - 1) {
@@ -18,16 +19,18 @@ function App() {
   // useEffect(clickHandler);
 
   setTimeout(() => {
-    if (index === images.length - 1) {
-      return setIndex(0);
+    if (index === items.length - 1) {
+      setIndex(0);
     } else {
-      return setIndex(index + 1);
+      handleChange(index);
+      setIndex(index + 1);
+      console.log(index);
     }
   }, 2000);
 
   function increaseHandler() {
     setIndex((prevIndx) => {
-      if (index === images.length - 1) {
+      if (index === items.length - 1) {
         return 0;
       }
       return prevIndx + 1;
@@ -36,23 +39,39 @@ function App() {
   function decreaseHandler() {
     setIndex((prevIndx) => {
       if (index === 0) {
-        return images.length - 1;
+        return items.length - 1;
       }
       return prevIndx - 1;
     });
   }
 
+  function handleChange(index) {
+    console.log(index);
+    setItems((prevItem) => {
+      return prevItem.map((el, idx) => {
+        if (index === idx) {
+          return { ...el, opacity: false };
+        } else {
+          return { ...el, opacity: true };
+        }
+      });
+    });
+    // console.log(items);
+  }
+
   return (
     <div className="flex-col overflow-hidden">
       <div className="flex it w-[60%] mx-auto h-full border-[5px] border-black ">
-        {images.map((el) => {
+        {items.map((el, idx) => {
           return (
             <img
-              key={el}
-              src={el}
+              key={idx}
+              src={el.image}
               alt=""
               style={{ translate: `${index * -100}%` }}
-              className="transition-all duration-1000 ease-in flex-grow-0 flex-shrink-0"
+              className={`transition-all duration-1000 ease-in flex-grow-0 flex-shrink-0 ${
+                el.opacity && "opacity-100"
+              } opacity-30`}
             />
           );
         })}
